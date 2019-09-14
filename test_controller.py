@@ -1,28 +1,37 @@
 import unittest
-import controller
+from controller import ProductController
+from controller import BrandController
+from controller import CategoryController
 
-class TestController(unittest.TestCase):
-
-    def test_save(self):
-        result = controller.save({"id":"1","nombre":"kartman"})
-        self.assertEqual(result,True)
+class TestProductController(unittest.TestCase):
+    def test_get_all(self):
+        result = ProductController.get_all()
+        self.assertTrue(len(result)>0)
 
     def test_get(self):
-        controller.save({"id":"1","nombre":"kartman"})
-        result = controller.get("1")
-        self.assertEqual(result,{"id":"1","nombre":"kartman"})
+        result = ProductController.get("5")
+        self.assertTrue(result!=None)
 
-    def test_update(self):
-        result = controller.update({"id":"1","nombre":"kenny"})
-        self.assertEqual(result,True)
+    def test_get_by_category(self):
+        result = ProductController.get_by_category("cellphone")
+        self.assertTrue(len(result)>0)
+    
+    def test_get_by_brand(self):
+        result = ProductController.get_by_brand("asus")
+        self.assertTrue(len(result)>0)
+    
+    def test_get_by_name(self):
+        result = ProductController.get_by_name("xiaomi")
+        self.assertTrue(len(result)>0)
 
-    def test_delete(self):
-        controller.save({"id":"1","nombre":"kartman"})
-        result = controller.delete("1")
-        self.assertEqual(result,True)
-        
-    def setUp(self):
-        pass
-        
-    def tearDown(self):
-        pass
+class TestCategoryController(unittest.TestCase):
+    def test_get_all(self):
+        result = CategoryController.get_all()
+        self.assertTrue(len(result)>0)
+
+class TestBrandController(unittest.TestCase):
+    def test_get_all(self):
+        result = BrandController.get_all()
+        self.assertTrue(len(result)>0)
+    
+    

@@ -10,6 +10,9 @@ class BrandController:
             del d["_id"]
             lista.append(d)
         return lista
+    
+    def save(item):
+        db.brands.save(item)
         
 class CategoryController:
     def get_all():
@@ -24,6 +27,9 @@ class CategoryController:
         for l in lista:
             if str(l["category"]).lower()==str(nombre).lower():
                 return l
+    
+    def save(item):
+        db.categories.save(item)
 
 class ProductController:
     def get_all():
@@ -73,36 +79,3 @@ class ProductController:
         
     def save(item):
         db.items.save(item)
-    
-# datos=[]
-
-# def save(data):
-#     if not data:return False
-#     datos.append(data)
-#     return True
-
-# def get(identificador):
-#     if not identificador:return None
-#     for d in datos:
-#         if d["id"]==identificador:
-#             return d
-
-# def update(data):
-#     if not data:return False
-#     for d in datos:
-#         if d["id"]==data["id"]:
-#             d.update(data)
-#     return True
-
-# def delete(identificador):
-#     i=0
-#     encontrado=False
-#     for d in datos:
-#         if identificador==d["id"]:
-#             encontrado=True
-#             break
-#         i+=1
-#     if encontrado:
-#         del datos[i]
-#         return True
-#     return False

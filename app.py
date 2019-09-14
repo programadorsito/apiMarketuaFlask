@@ -31,6 +31,7 @@ class Categories(Resource):
 class Brands(Resource):
     def get(self):
         return jsonify({"brands":BrandController.get_all()})
+    
 
 @api.resource('/items/category/<category_name>')
 class ProductsByCategory(Resource):
