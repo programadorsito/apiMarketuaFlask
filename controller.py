@@ -2,6 +2,7 @@ import pymongo
 client = pymongo.MongoClient("mongodb+srv://flask:flask@cluster0-pkjgu.mongodb.net/test?retryWrites=true&w=majority")
 db = client.test
 
+seller = {"seller_id":13,"seller_name":"Flask team","seller_rating":4.3,"seller_email":"flask@marketua.co"}
 
 class BrandController:
     def get_all():
@@ -28,6 +29,14 @@ class CategoryController:
             if str(l["category"]).lower()==str(nombre).lower():
                 return l
     
+    def get(category_id):
+        lista=[]
+        for d in db.categories.find({}):
+            del d["_id"]
+            if str(d["id"])==str(category_id):
+                return d
+        return {}
+        
     def save(item):
         db.categories.save(item)
 
@@ -36,6 +45,10 @@ class ProductController:
         lista=[]
         for d in db.items.find({}):
             del d["_id"]
+            del d["seller_id"]
+            # del d["category_id"]
+            d["seller"]=seller
+            d["category"]=CategoryController.get(d["category_id"])
             lista.append(d)
         return lista
     
