@@ -18,6 +18,7 @@ brands =  {"brands":[{"brand":"HP"},{"brand":"Huawei"},{"brand":"Lenovo"},{"bran
 app = Flask(__name__)
 
 # cors = CORS(app,  origins=['http://localhost:8080'])
+cors = CORS(app)
 api = Api(app)
 
 from flask import jsonify
