@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-
+from os import environ
 from service import Car
 from service import CarList
 from service import Categories
@@ -13,7 +13,7 @@ from service import Product
 
 app = Flask(__name__)
 
-cors = CORS(app,  origins=['http://localhost:8080'])
+# cors = CORS(app,  origins=['http://localhost:8080'])
 api = Api(app)
 
 from flask import jsonify
@@ -85,4 +85,4 @@ class Car(Resource):
 # api.add_resource(Products, "/search", methods=["GET"])
 
 
-app.run(host= '0.0.0.0')
+app.run(host= '0.0.0.0', port=environ.get('PORT'))
