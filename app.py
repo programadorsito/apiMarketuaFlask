@@ -1,15 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
+from flask import request
 from os import environ
-from service import Car
-from service import CarList
-from service import Categories
-from service import Products
-from service import ProductsByCategory
-from service import ProductsByBrand
-from service import Brands
-from service import Product
+from controller import ProductController
+from controller import BrandController
+from controller import CategoryController
 import sys
 
 categories = {"status":"OK","data":[{"id":4,"category":"cellphone","created_at":"2019-09-12T03:50:18.799Z","updated_at":"2019-09-12T03:50:18.799Z"},{"id":5,"category":"computers","created_at":"2019-09-12T03:50:33.846Z","updated_at":"2019-09-12T03:50:33.846Z"},{"id":6,"category":"audio","created_at":"2019-09-12T03:50:43.038Z","updated_at":"2019-09-12T03:50:43.038Z"},{"id":7,"category":"cameras","created_at":"2019-09-12T03:50:53.422Z","updated_at":"2019-09-12T03:50:53.422Z"},{"id":8,"category":"tv","created_at":"2019-09-12T03:51:02.408Z","updated_at":"2019-09-12T03:51:02.408Z"}]}
@@ -29,91 +25,43 @@ parser = reqparse.RequestParser()
 @api.resource('/categories')
 class Categories(Resource):
     def get(self):
-        return jsonify(categories)
+        return jsonify({"status":"OK", "data":CategoryController.get_all()})
 
 @api.resource('/brands')
 class Brands(Resource):
     def get(self):
-        return jsonify(brands)
+        return jsonify({"brands":BrandController.get_all()})
 
 @api.resource('/items/category/<category_name>')
 class ProductsByCategory(Resource):
     def get(self,  category_name:str):
-        listaItems = []
-        categoria = None
-        for c in categories["data"]:
-            if str(c["category"]).lower()==str(category_name).lower():
-                categoria=c
-                break
-        
-        if categoria:
-            for item in items["data"]:
-                if str(item["category_id"]).lower()==str(categoria["id"]).lower():
-                    item["category"]=categoria
-                    listaItems.append(item)
-        return jsonify({"products":listaItems})
+        return jsonify({"products":ProductController.get_by_category(category_name)})
         
         # return jsonify({"products":listaItems})
     
 @api.resource('/items/brand/<brand_name>')
 class ProductsByBrand(Resource):
     def get(self, brand_name:str):
-        listaItems = []
-        for item in items["data"]:
-            if str(item["brand"]).lower()==str(brand_name).lower():
-                listaItems.append(item)
-        return jsonify({"products":listaItems})
-        # return jsonify({"products":[{"id":6,"name":"ASUS Zenfone","price":450000.0,"brand":"ASUS","thumbnail":"https://media.aws.alkosto.com/media/catalog/product/cache/6/image/69ace863370f34bdf190e4e164b6e123/4/7/4718017172684_10.jpg","rating":4.0,"description":"De segunda, pero está como nuevo","sold_units":0,"seller":{"seller_id":3,"seller_name":"Tobón","seller_rating":3.8,"seller_email":"juan.tobon6@marketua.co","created_at":"2019-09-12T04:30:42.151Z","updated_at":"2019-09-12T04:30:42.151Z"},"category":{"category_id":4,"category_name":"cellphone"}},{"id":4,"name":"Portatil ASUS Intel Core i5","price":1500000.0,"brand":"ASUS","thumbnail":"https://p7.hiclipart.com/preview/599/481/84/asus-eee-pad-transformer-laptop-intel-core-i5-touchscreen-2-in-1-pc-asus-laptop-png-transparent.jpg","rating":4.5,"description":"Portátil bacano con 8 GB de RAM y 2 GB de Gráfica","sold_units":0,"seller":{"seller_id":1,"seller_name":"ASUS","seller_rating":4.3,"seller_email":"asus@marketua.co","created_at":"2019-08-31T20:45:55.638Z","updated_at":"2019-08-31T20:45:55.638Z"},"category":{"category_id":5,"category_name":"computers"}}]})
+        items=ProductController.get_by_brand(brand_name)
+        return jsonify({"products":items})
         
 
 @api.resource('/items/<item_id>')
 class Product(Resource):
     def get(self, item_id):
-        for item in items["data"]:
-            if str(item["id"])==str(item_id):
-                return jsonify(item)
-        return jsonify({})
+        item = ProductController.get(str(item_id))
+        return jsonify(item)
 
 @api.resource('/search')
 class Products(Resource):
     def get(self):
-        return jsonify({"products":[{"id":5,"name":"Portatil Lenovo Thinkpad","price":2500000.0,"brand":"Lenovo","thumbnail":"https://www.lenovo.com/medias/lenovo-laptop-thinkpad-x1-carbon-7th-gen-gallery-10.jpg?context=bWFzdGVyfHJvb3R8MTQxNDAyfGltYWdlL2pwZ3xoZDUvaDIwLzEwMDYxMzIxNDY5OTgyLmpwZ3xhYjJjMTU3YjkzNThhN2E2NTkyMjBlNTUzMDUwOGNlYzBmMmU5NDhkZWExOGNmYmViN2YwMmQzMTYwYWFiYjlh","rating":4.8,"description":"16 GB RAM","sold_units":15,"seller":{"seller_id":2,"seller_name":"Lenovo","seller_rating":4.2,"seller_email":"lenovo@marketua.co"},"category":{"category_id":5,"category_name":"computers"}},{"id":4,"name":"Portatil ASUS Intel Core i5","price":1500000.0,"brand":"ASUS","thumbnail":"https://p7.hiclipart.com/preview/599/481/84/asus-eee-pad-transformer-laptop-intel-core-i5-touchscreen-2-in-1-pc-asus-laptop-png-transparent.jpg","rating":4.5,"description":"Portátil bacano con 8 GB de RAM y 2 GB de Gráfica","sold_units":0,"seller":{"seller_id":1,"seller_name":"ASUS","seller_rating":4.3,"seller_email":"asus@marketua.co"},"category":{"category_id":5,"category_name":"computers"}},{"id":12,"name":"Portatil Acer A315-41g-r0zz","price":1899999.0,"brand":"Acer","thumbnail":"https://http2.mlstatic.com/portatil-acer-a315-41g-r0zz-ryzen-5-1tb-8g-radeon-2gb-15-D_NQ_NP_754375-MCO31556374398_072019-F.jpg","rating":4.0,"description":"","sold_units":1,"seller":{"seller_id":3,"seller_name":"Tobón","seller_rating":3.8,"seller_email":"juan.tobon6@marketua.co"},"category":{"category_id":5,"category_name":"computers"}},{"id":13,"name":"Portatil HP 15 Da0015la","price":2779900.0,"brand":"HP","thumbnail":"https://i.linio.com/p/f049628110c815f7626a4ab33d1bc6a9-product.jpg","rating":4.5,"description":"","sold_units":10,"seller":{"seller_id":3,"seller_name":"Tobón","seller_rating":3.8,"seller_email":"juan.tobon6@marketua.co"},"category":{"category_id":5,"category_name":"computers"}}]})
+        nombre = request.args.get('q')
+        return jsonify({"products":ProductController.get_by_name(nombre)})
 
 @api.resource("/")
 class AllProducts(Resource):
     def get(self):
         return jsonify(items)
-
-class Car(Resource):
-
-    def get(self, car_id: str):
-        return jsonify({'success': True, 'data': {}})
-
-    def post(self):
-        data = parser.parse_args()
-        return jsonify({'success': True, 'data': None})
-
-    def put(self):
-        data = parser.parse_args()
-        return jsonify({'success': True, 'data': None})
-
-    def delete(self, car_id):
-        return jsonify({'success': True, 'data': None})
-
-
-
-# api.add_resource(Car, '/car', '/car/<car_id>',methods=['GET', 'POST', 'PUT', 'DELETE'])
-# api.add_resource(CarList, '/cars',methods=['GET'])
-# api.add_resource(Categories, "/categories", methods=["GET"])
-# api.add_resource(Brands, "/brands", methods=["GET"])
-# api.add_resource(ProductsByCategory, "/items/category/<category_name>", methods=["GET"])
-# api.add_resource(ProductsByCategory, "/items/category", methods=["GET"])
-# api.add_resource(ProductsByBrand, "/items/brand/<brand_name>", methods=["GET"])
-# api.add_resource(ProductsByBrand, "/items/brand", methods=["GET"])
-# api.add_resource(Product, "/items/<item_id>", methods=["GET"])
-# api.add_resource(Product, "/items", methods=["GET"])
-# api.add_resource(Product, "/items", methods=["GET"])
-# api.add_resource(Products, "/search", methods=["GET"])
 
 
 app.run(host= '0.0.0.0', port=environ.get('PORT'))
