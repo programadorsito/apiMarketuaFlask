@@ -1,5 +1,14 @@
 # Api marketua Flask :
 
+## Para iniciar la api ejecute
+pip install -r requirements.txt
+python app.py
+
+## para correr las pruebas unitarias ejecute
+python -m unittest test_controller.py
+
+##Las URLs son:
+
 ## Lista de categorías:
 https://marketuaflask.herokuapp.com/categories
 
