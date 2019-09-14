@@ -8,6 +8,7 @@ from controller import BrandController
 from controller import CategoryController
 import sys
 
+
 app = Flask(__name__)
 
 # cors = CORS(app,  origins=['http://localhost:8080'])
