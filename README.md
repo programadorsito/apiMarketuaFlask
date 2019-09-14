@@ -1,6 +1,6 @@
 # Api marketua Flask :
 
-## Para iniciar la api ejecute
+## Para iniciar la API ejecute
 ##### pip install -r requirements.txt
 ##### python app.py
 
