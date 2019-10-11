@@ -43,7 +43,15 @@ class CategoryController:
         db.categories.save(item)
 
 class ProductController:
+    # def update_all():
+    #     lista=[]
+    #     for d in db.items.find({}):
+    #         del d["_id"]
+    #         d["thumbnail"]="https://img.icons8.com/office/80/000000/computer.png"
+    #         db.items.update_one(d,{"$inc":{"thumbnail":"https://img.icons8.com/office/80/000000/computer.png"}})
+            
     def get_all():
+        # ProductController.update_all()
         lista=[]
         for d in db.items.find({}):
             del d["_id"]
@@ -52,6 +60,7 @@ class ProductController:
             d["seller"]=seller
             d["category"]=CategoryController.get(d["category_id"])
             d["images"]=[{"url":d["thumbnail"]}]
+            d["thumbnail"]="https://img.icons8.com/office/80/000000/computer.png"
             lista.append(d)
         return lista
     
