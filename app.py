@@ -6,6 +6,7 @@ from os import environ
 from controller import ProductController
 from controller import BrandController
 from controller import CategoryController
+from controller import CheckoutController
 import sys
 
 
@@ -57,9 +58,25 @@ class Products(Resource):
         nombre = request.args.get('q')
         return jsonify({"products":ProductController.get_by_name(nombre)})
 
+@api.resource('/checkout')
+class Checkouts(Resource):
+    def post(self):
+        CheckoutController.save(request.json)
+        return jsonify({"ok":True})
+
+@api.resource('/user/<user_name>/orders')
+class Order(Resource):
+    def get(self, user_name:str):
+        items=CheckoutController.get_by_user(user_name)
+        return jsonify({"orders":items})
+
+        # nombre = request.args.get('q')
+        # return jsonify({"products":ProductController.get_by_name(nombre)})
+
 @api.resource("/")
 class AllProducts(Resource):
     def get(self):
+        items = ProductController.get_all()
         return jsonify(items)
 
 

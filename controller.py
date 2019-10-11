@@ -34,6 +34,8 @@ class CategoryController:
         for d in db.categories.find({}):
             del d["_id"]
             if str(d["id"])==str(category_id):
+                d["category_name"]=d.get("category")
+                d["category_id"]=d.get("id")
                 return d
         return {}
         
@@ -49,6 +51,7 @@ class ProductController:
             # del d["category_id"]
             d["seller"]=seller
             d["category"]=CategoryController.get(d["category_id"])
+            d["images"]=[{"url":d["thumbnail"]}]
             lista.append(d)
         return lista
     
@@ -92,3 +95,26 @@ class ProductController:
         
     def save(item):
         db.items.save(item)
+
+
+class CheckoutController:
+    def get_all():
+        lista=[]
+        for d in db.checkout.find({}):
+            del d["_id"]
+            lista.append(d)
+        return lista
+        
+    def get_by_user(username):
+        lista=[]
+        checkouts  = CheckoutController.get_all()
+        for checkout in checkouts:
+            if checkout["user_name"]==username:
+                lista.append(checkout)
+        return lista
+        
+    def save(d):
+        if d.get("items"):
+            for checkout in d.get("items"):
+                db.checkout.save(checkout)
+        
