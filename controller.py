@@ -123,5 +123,5 @@ class CheckoutController:
         return lista
         
     def save(d):
-        db.checks.save(checkout)
+        db.checks.save(d)
         
