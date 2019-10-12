@@ -6,6 +6,7 @@ from os import environ
 from controller import ProductController
 from controller import BrandController
 from controller import CategoryController
+from controller import CarController
 from controller import CheckoutController
 import sys
 
@@ -70,6 +71,14 @@ class Checkouts(Resource):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         CheckoutController.save(request.json)
         return jsonify({"ok":True})
+    
+@api.resource('/save-cart/')
+class Cars(Resource):
+    def post(self):
+        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
+        CarController.save(request.json)
+        return jsonify({"ok":True})
+        
 
 @api.resource('/user/<user_name>/orders')
 class Order(Resource):
@@ -83,7 +92,30 @@ class OrderUsers(Resource):
     def get(self, user_name:str):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         items=CheckoutController.get_by_user(user_name)
-        return jsonify({"orders":items})
+        return jsonify({"status":"OK", "data":items, "orders":items})
+        
+        
+@api.resource('/share-cart/<user_name>/')
+class CarsUser(Resource):
+    def get(self, user_name:str):
+        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
+        items=CarController.get_by_user(user_name)
+        return jsonify({"status":"OK", "data":items, "carts":items})
+
+@api.resource('/share-cart/<user_name>/cart/<identificador>')
+class CarsUserId(Resource):
+    def get(self, user_name:str, identificador:str):
+        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
+        items=CarController.get_by_id(user_name, identificador)
+        return jsonify({"status":"OK", "data":items, "carts":items})
+
+@api.resource('/orders/<user_name>/')
+class OrderUsersSlash(Resource):
+    def get(self, user_name:str):
+        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
+        items=CheckoutController.get_by_user(user_name)
+        return jsonify({"status":"OK", "data":items, "orders":items})
+
 
         # nombre = request.args.get('q')
         # return jsonify({"products":ProductController.get_by_name(nombre)})

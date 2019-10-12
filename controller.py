@@ -126,3 +126,42 @@ class CheckoutController:
     def save(d):
         db.compras.save(d)
         
+
+class CarController:
+    def get_all():
+        contador=1
+        lista=[]
+        for d in db.car.find({}):
+            del d["_id"]
+            d["cart"]={"username":d.get("username")}
+            d["id"]=contador
+            lista.append(d)
+            contador+=1
+        return lista
+        
+    def get_by_user(username):
+        lista=[]
+        checkouts  = CarController.get_all()
+        print(checkouts)
+        for checkout in checkouts:
+            if checkout.get("user_name")==username or checkout.get("username")==username:
+                lista.append(checkout)
+        return lista
+    
+    def get_by_id(username,idd):
+        print("el id es : "+idd)
+        print("el username es : "+username)
+        lista=[]
+        checkouts  = CarController.get_all()
+        print(checkouts)
+        for checkout in checkouts:
+            if checkout.get("user_name")==username or checkout.get("username")==username:
+                print("paso el primero")
+                if str(checkout.get("id")).strip()==str(idd).strip():
+                    print("paso el segundo")
+                    lista.append(checkout)
+        return lista
+        
+    def save(d):
+        db.car.save(d)
+        
