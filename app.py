@@ -77,6 +77,13 @@ class Order(Resource):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         items=CheckoutController.get_by_user(user_name)
         return jsonify({"orders":items})
+        
+@api.resource('/orders/<user_name>')
+class OrderUsers(Resource):
+    def get(self, user_name:str):
+        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
+        items=CheckoutController.get_by_user(user_name)
+        return jsonify({"orders":items})
 
         # nombre = request.args.get('q')
         # return jsonify({"products":ProductController.get_by_name(nombre)})
