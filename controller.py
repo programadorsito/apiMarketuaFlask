@@ -109,7 +109,7 @@ class ProductController:
 class CheckoutController:
     def get_all():
         lista=[]
-        for d in db.checks.find({}):
+        for d in db.compras.find({}):
             del d["_id"]
             lista.append(d)
         return lista
@@ -117,11 +117,12 @@ class CheckoutController:
     def get_by_user(username):
         lista=[]
         checkouts  = CheckoutController.get_all()
+        print(checkouts)
         for checkout in checkouts:
-            if checkout["user_name"]==username:
+            if checkout.get("user_name")==username or checkout.get("username")==username:
                 lista.append(checkout)
         return lista
         
     def save(d):
-        db.checks.save(d)
+        db.compras.save(d)
         
