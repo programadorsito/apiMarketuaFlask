@@ -133,8 +133,11 @@ class CarController:
         lista=[]
         for d in db.car.find({}):
             del d["_id"]
-            d["cart"]={"username":d.get("username")}
+            d["cart"]={"username":d.get("username"), "id":contador}
             d["id"]=contador
+            if d.get("items"):
+                for item in d["items"]:
+                    item["cart_id"]=contador
             lista.append(d)
             contador+=1
         return lista
