@@ -92,7 +92,7 @@ class OrderUsers(Resource):
     def get(self, user_name:str):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         items=CheckoutController.get_by_user(user_name)
-        return jsonify({"status":"OK", "data":items, "orders":items})
+        return jsonify({"status":"OK","orders":items})
         
         
 @api.resource('/share-cart/<user_name>/')
@@ -114,7 +114,7 @@ class OrderUsersSlash(Resource):
     def get(self, user_name:str):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         items=CheckoutController.get_by_user(user_name)
-        return jsonify({"status":"OK", "data":items, "orders":items})
+        return jsonify({"status":"OK", "orders":items})
 
 
         # nombre = request.args.get('q')
