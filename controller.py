@@ -109,7 +109,7 @@ class ProductController:
 class CheckoutController:
     def get_all():
         lista=[]
-        for d in db.compras.find({}):
+        for d in db.comprita.find({}):
             del d["_id"]
             lista.append(d)
         return lista
@@ -124,7 +124,7 @@ class CheckoutController:
         return lista
         
     def save(d):
-        db.compras.save(d)
+        db.comprita.save(d)
         
 
 class CarController:
