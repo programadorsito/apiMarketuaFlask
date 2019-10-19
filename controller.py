@@ -131,13 +131,15 @@ class CarController:
     def get_all():
         contador=1
         lista=[]
-        for d in db.car.find({}):
+        for d in db.carritos.find({}):
             del d["_id"]
-            d["cart"]={"username":d.get("username"), "id":contador}
             d["id"]=contador
             if d.get("items"):
+                contadorItems = 1
                 for item in d["items"]:
                     item["cart_id"]=contador
+                    item["id"]=contadorItems
+                    contadorItems+=1
             lista.append(d)
             contador+=1
         return lista
@@ -166,5 +168,5 @@ class CarController:
         return lista
         
     def save(d):
-        db.car.save(d)
+        db.carritos.save(d)
         

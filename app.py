@@ -101,14 +101,7 @@ class CarsUser(Resource):
         if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
         items=CarController.get_by_user(user_name)
         return jsonify({"status":"OK","carts":items})
-
-@api.resource('/share-cart/<user_name>/cart/<identificador>/')
-class CarsUserId(Resource):
-    def get(self, user_name:str, identificador:str):
-        if request.headers.get('idToken') and  request.headers.get('idToken') != idToken:return jsonify({"result":"Token no valido", "ok":False})
-        items=CarController.get_by_id(user_name, identificador)
-        return jsonify({"status":"OK","carts":items})
-
+        
 @api.resource('/orders/<user_name>/')
 class OrderUsersSlash(Resource):
     def get(self, user_name:str):
