@@ -138,6 +138,7 @@ class CarController:
                 contadorItems = 1
                 for item in d["items"]:
                     item["cart_id"]=contador
+                    item["product_id"]=None
                     item["id"]=contadorItems
                     contadorItems+=1
             lista.append(d)
