@@ -151,7 +151,9 @@ class CarController:
         for checkout in checkouts:
             if checkout.get("user_name")==username or checkout.get("username")==username:
                 lista.append(checkout)
-        return lista
+        if lista:
+            return lista[-1]
+        return {}
     
     def get_by_id(username,idd):
         print("el id es : "+idd)
